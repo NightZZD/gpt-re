@@ -29,3 +29,24 @@ decode = lambda l: ''.join([itos[i] for i in l])  # decoder: take a list of inte
 
 print(encode("hii there"))
 print(decode(encode("hiii there")))
+
+# let's now encode the entire text dataset and store it into a torch.Tensor
+import torch  # we use PyTorch: https://pytorch.org
+data = torch.tensor(encode(text), dtype=torch.long)
+print(data.shape, data.dtype)
+print(data[:100])  # the 100 characters we looked at earlier will to the GPT look like this
+
+# Let's now split up the data into train and validation sets
+n = int(0.9 * len(data))  # first 90% will be train, rest val
+train_data = data[:n]
+val_data = data[n:]
+
+block_size = 8
+train_data[:block_size+1]
+
+x = train_data[:block_size]
+y = train_data[1:block_size+1]
+for t in range(block_size):
+    context = train_data[:t+1]
+    target = train_data[t+1]
+    print(f"when input is {context} the target: {target}")
